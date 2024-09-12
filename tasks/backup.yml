@@ -1,7 +1,22 @@
 ---
 # Junos backup config tasks
+# - name: TEST - Gather brief interface status
+#   junipernetworks.junos.junos_command:
+#     commands: show interfaces terse
+#   register: interface_output
+
+# - name: TEST - Display interface status
+#   ansible.builtin.debug:
+#     var: interface_output['stdout_lines']
+
 - name: Collect junos device running configs
   junipernetworks.junos.junos_command:
-    commands: "show configuration"
+    commands: show configuration
     display: set
-  register: junos_config_output
+  register: config_output
+
+- name: Save the configuration to the temporary config store
+  ansible.builtin.copy:
+    content: "{{ config_output['stdout'] }}"
+    dest: "{{ tmp_config_store }}"
+  delegate_to: localhost
