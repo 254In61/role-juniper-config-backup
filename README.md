@@ -13,10 +13,12 @@ Role contains tasks that perform config backup of junos devices
 # How to use
 - See example below
 
-# Example vars file
+## example vars file
 
 ! all-vars.yml
 ---
+junos_git_repo_dir: junos
+
 git_user: "{{ lookup('env', 'ANSIBLE_NET_USERNAME') }}"
 
 git_pwd: "{{ lookup('env', 'ANSIBLE_NET_PASSWORD') }}"
@@ -30,12 +32,9 @@ repo_dir: network-devices-configs-backup-store
 namespace: redhat
 
 git_repo: "https://{{ git_user }}:{{ git_pwd }}@gitlab.vodafone.com.au/{{ namespace }}/{{ repo_dir }}.git"
-
-cisco_git_repo_dir: cisco
-
 ...
 
-## example playbook file
+## example playbook 
 ---
 - name: Backup junos configurations
 
@@ -80,7 +79,7 @@ cisco_git_repo_dir: cisco
         name: role-junos-config-backup
 
       vars:
-      
+
         junos: true
 
    
