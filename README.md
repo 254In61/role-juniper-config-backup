@@ -36,6 +36,7 @@ git_repo: "https://{{ git_user }}:{{ git_pwd }}@gitlab.vodafone.com.au/{{ namesp
 
 ## example playbook 
 ---
+
 - name: Backup junos configurations
 
   hosts: appc_junos_dc_gw
