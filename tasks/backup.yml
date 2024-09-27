@@ -12,13 +12,6 @@
 #     dest: "{{ tmp_config_store }}"
 #   delegate_to: localhost
 
-
-- name: Add host to failed_hosts list if the task fails
-  ansible.builtin.set_fact:
-    failed_hosts: "{{ failed_hosts + inventory_hostname }}"
-  when: config_output.failed
-  ignore_errors: true
-
 # regex_replace('\r\n', '\n'): Ensures that the configuration is formatted properly with new lines,
 # in case the original output contains carriage return and line feed (\r\n).
 - name: Ensure the config is properly formatted
