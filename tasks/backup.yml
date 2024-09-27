@@ -21,7 +21,7 @@
   ansible.builtin.set_fact:
       failed_hosts: "{{ failed_hosts + [inventory_hostname] }}"
   when: config_output["failed"]
-  delegate_to: localhost
+  # delegate_to: localhost
 
 ## Capture the fails here write them to failed_hosts??
 
@@ -33,6 +33,7 @@
     formatted_config: "{{ config_output.stdout[0] | regex_replace('\r\n', '\n') }}"
   delegate_to: localhost
   ignore_errors: true
+  when: config_output["failed"] == false
 
 - name: Save the configuration to the temporary config store
   ansible.builtin.copy:
@@ -40,3 +41,4 @@
     dest: "{{ tmp_config_store }}"
   delegate_to: localhost
   ignore_errors: true
+  when: config_output["failed"] == false
