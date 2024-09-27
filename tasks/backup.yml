@@ -14,7 +14,7 @@
 
 - name: Debug output
   ansible.builtin.debug:
-    var: config_output
+    var: config_output["failed"]
   delegate_to: localhost
 
 ## Capture the fails here write them to failed_hosts??
