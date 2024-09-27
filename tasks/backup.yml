@@ -12,23 +12,25 @@
 #     dest: "{{ tmp_config_store }}"
 #   delegate_to: localhost
 
-- name: Run specific tasks in a serial
-  block:
-  # List if written in parallel, only 1 value is written
-    - name: Debug output
-      ansible.builtin.debug:
-        var: config_output["failed"]
-      delegate_to: localhost
-
-    - name: Add host to failed_hosts if task failed
-      ansible.builtin.set_fact:
-        failed_hosts: "{{ failed_hosts + [inventory_hostname] }}"
-      when: config_output["failed"]
-      delegate_to: localhost
-  serial: 1
+- name: Debug output
+  ansible.builtin.debug:
+    var: config_output["failed"]
+  delegate_to: localhost
 
 ## Capture the fails here write them to failed_hosts??
+## Issue is, the list has only one item after this task.
+## Can't write into a list in parallel? what of a file?
+# - name: Add host to failed_hosts if task failed
+#   ansible.builtin.set_fact:
+#     failed_hosts: "{{ failed_hosts + [inventory_hostname] }}"
+#   when: config_output["failed"]
+#   delegate_to: localhost
 
+- name: Append host to file if task failed
+  ansible.builtin.command:
+    cmd: "echo '{{ inventory_hostname }}' >> {{ fails_file }}"
+  when: config_output["failed"]
+  delegate_to: localhost
 
 # regex_replace('\r\n', '\n'): Ensures that the configuration is formatted properly with new lines,
 # in case the original output contains carriage return and line feed (\r\n).
