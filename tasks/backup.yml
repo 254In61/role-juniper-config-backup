@@ -1,11 +1,4 @@
 ---
-- name: Set facts
-  ansible.builtin.set_fact:
-    tmp_config_store: "{{ local_root_dir }}/{{ file_name }}"
-  run_once: true
-  ignore_errors: true
-  delegate_to: localhost
-
 - name: Collect junos device running configs
   junipernetworks.junos.junos_command:
     commands: show configuration
