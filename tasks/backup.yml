@@ -1,10 +1,4 @@
 ---
-- name: Set file_name
-  ansible.builtin.set_fact:
-    tmp_config_file: "{{ inventory_hostname }}-running-config.txt"
-  delegate_to: localhost
-  ignore_errors: true
-
 - name: Collect junos device running configs
   junipernetworks.junos.junos_command:
     commands: show configuration
@@ -23,14 +17,14 @@
 
 - name: Debug tmp config file
   ansible.builtin.debug:
-    var: "{{ tmp_config_file }}"
+    var: config_file_name
   delegate_to: localhost
   ignore_errors: true
 
 - name: Save the configuration to the temporary config store
   ansible.builtin.copy:
     content: "{{ formatted_config }}"
-    dest: "{{ tmp_root_dir }}/{{ tmp_config_file }}"
+    dest: "{{ tmp_root_dir }}/{{ config_file_name }}"
   delegate_to: localhost
   ignore_errors: true
   when: config_output["failed"] == false
