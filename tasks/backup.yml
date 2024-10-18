@@ -17,7 +17,7 @@
 
 - name: Debug tmp config file
   ansible.builtin.debug:
-    var: config_file_name
+    var: tmp_file_path
   delegate_to: localhost
   ignore_errors: true
 
