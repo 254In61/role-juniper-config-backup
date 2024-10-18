@@ -1,11 +1,4 @@
 ---
-- name: Set temp config store path
-  ansible.builtin.set_fact:
-    tmp_config_store: "{{ tmp_root_dir }}/running-config.cfg"
-    # tmp_config_store: "{{ tmp_root_dir }}/{{ inventory_hostname }}-running-config.cfg"
-  ignore_errors: true
-  delegate_to: localhost
-  
 - name: Collect junos device running configs
   junipernetworks.junos.junos_command:
     commands: show configuration
@@ -21,6 +14,12 @@
   delegate_to: localhost
   ignore_errors: true
   when: config_output["failed"] == false
+
+- name: Debug tmp storage file_path
+  ansible.builtin.debug:
+    var: "{{ tmp_config_store }}"
+  delegate_to: localhost
+  ignore_errors: true
 
 - name: Save the configuration to the temporary config store
   ansible.builtin.copy:
