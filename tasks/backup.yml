@@ -2,7 +2,7 @@
 - name: Set varibales
   ansible.builtin.set_fact:
     tmp_file_path: "{{ tmp_root_dir }}/{{ inventory_hostname }}-running-config.cfg"
-    git_repo_device_dir_path: "{{ tmp_root_dir }}/{{ git_repo_name }}/{{ vendor_dir }}/{{ inventory_hostname }}"
+    inventory_hostname_dir_path: "{{ tmp_root_dir }}/{{ git_repo_name }}/{{ vendor_dir }}/{{ inventory_hostname }}"
   delegate_to: localhost
 
 - name: Collect junos device running configs
@@ -24,7 +24,7 @@
 - name: Save the configuration to the temporary config store
   ansible.builtin.copy:
     content: "{{ formatted_config }}"
-    dest: "{{ tmp_root_dir }}"
+    dest: "{{ tmp_file_path }}"
   delegate_to: localhost
   ignore_errors: true
   when: config_output["failed"] == false
@@ -43,7 +43,7 @@
 
 - name: Ensure inventory_hostname dir is present - create if absent
   ansible.builtin.file:
-    path: "{{ git_repo_device_dir_path }}"
+    path: "{{ inventory_hostname_dir_path }}"
     state: directory
   ignore_errors: true
   delegate_to: localhost
@@ -64,7 +64,7 @@
 
 - name: Copy the .cfg file to local git repo
   ansible.builtin.shell: |
-    cp {{ tmp_file_path }} {{ git_repo_device_dir_path }}
+    cp {{ tmp_file_path }} {{ inventory_hostname_dir_path }}
   ignore_errors: true
   delegate_to: localhost
 
