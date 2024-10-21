@@ -47,7 +47,6 @@
     state: directory
   ignore_errors: true
   delegate_to: localhost
-  when: file_upload
 
 - name: List collected running config files
   ansible.builtin.shell: |
@@ -70,7 +69,7 @@
 
 - name: Commit the changes and push to the remote repository
   ansible.builtin.shell: |
-     cd {{ local_git_repo_path }}
+     cd {{ tmp_root_dir }}/{{ git_repo_name }}
      git config --global user.name {{ git_user }}
      git config --global user.email {{ git_user_email }}
      git add .
