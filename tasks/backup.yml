@@ -55,11 +55,11 @@
   delegate_to: localhost
   register: files_collection
 
-- name: Debug output
-  ansible.builtin.debug:
-    var: files_collection.stdout_lines
-  run_once: true
-  delegate_to: localhost
+# - name: Debug output
+#   ansible.builtin.debug:
+#     var: files_collection.stdout_lines
+#   run_once: true
+#   delegate_to: localhost
 
 - name: Copy the .cfg file to local git repo
   ansible.builtin.shell: |
