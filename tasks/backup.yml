@@ -78,7 +78,9 @@
      git commit -m "file updates on $(date)"
      git push
   run_once: true
-  ignore_errors: true
+  environment:
+    GIT_SSL_NO_VERIFY: "true"
+  # ignore_errors: true # You want the play to fail if git push does not happen
   delegate_to: localhost
 
 # Might not need this since containers are ephemeral.
