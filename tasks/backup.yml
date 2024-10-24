@@ -38,6 +38,8 @@
     version: "{{ git_repo_branch }}"
     force: yes       # Still clone down and overwrite incase local repo is existing.
   # ignore_errors: true # You want your play to fail if there's no repo cloned down
+  environment:
+    GIT_SSL_NO_VERIFY: "true"
   run_once: true
   delegate_to: localhost
 
