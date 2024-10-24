@@ -2,7 +2,7 @@
 - name: Set varibales
   ansible.builtin.set_fact:
     tmp_file_path: "{{ tmp_root_dir }}/{{ inventory_hostname }}-running-config.cfg"
-    inventory_hostname_dir_path: "{{ tmp_root_dir }}/{{ git_repo_name }}/{{ vendor_dir }}/{{ inventory_hostname }}"
+    inventory_hostname_dir_path: "{{ tmp_root_dir }}/{{ git_repo_name }}/{{ vendor_dir }}/{{ inventory_hostname }}/config-backup"
   delegate_to: localhost
 
 - name: Collect junos device running configs
@@ -37,7 +37,7 @@
     dest: "{{ tmp_root_dir }}/{{ git_repo_name }}"
     version: "{{ git_repo_branch }}"
     force: yes       # Still clone down and overwrite incase local repo is existing.
-  ignore_errors: true
+  # ignore_errors: true # You want your play to fail if there's no repo cloned down
   run_once: true
   delegate_to: localhost
 
@@ -79,6 +79,8 @@
   ignore_errors: true
   delegate_to: localhost
 
+# Might not need this since containers are ephemeral.
+# But if testing or end up running the playbook more than once in the same container, this comes in handy
 - name: Clean up files
   ansible.builtin.shell: |
     cd {{ tmp_root_dir }}
