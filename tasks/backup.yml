@@ -1,16 +1,16 @@
 ---
-- name: Set varibales
-  ansible.builtin.set_fact:
-    tmp_file_path: "{{ tmp_root_dir }}/{{ inventory_hostname }}-running-config.cfg"
-    inventory_hostname_dir_path: "{{ tmp_root_dir }}/{{ git_repo_name }}/{{ vendor_dir }}/{{ inventory_hostname }}/config-backup"
-  delegate_to: localhost
-
 - name: Collect junos device running configs
   junipernetworks.junos.junos_command:
     commands: show configuration
     display: set
   register: config_output
-  ignore_errors: true
+  # ignore_errors: true .. Whatever fails you want it out
+
+- name: Set varibales
+  ansible.builtin.set_fact:
+    tmp_file_path: "{{ tmp_root_dir }}/{{ inventory_hostname }}-running-config.cfg"
+    inventory_hostname_dir_path: "{{ tmp_root_dir }}/{{ git_repo_name }}/{{ vendor_dir }}/{{ inventory_hostname }}/config-backup"
+  delegate_to: localhost
 
 # regex_replace('\r\n', '\n'): Ensures that the configuration is formatted properly with new lines,
 # in case the original output contains carriage return and line feed (\r\n).
