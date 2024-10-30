@@ -6,6 +6,10 @@
   register: config_output
   # ignore_errors: true .. Whatever fails you want it out
 
+- name: Display task results
+  ansible.builtin.debug:
+    var: config_output
+
 - name: Set varibales
   ansible.builtin.set_fact:
     tmp_file_path: "{{ tmp_root_dir }}/{{ inventory_hostname }}-running-config.cfg"
