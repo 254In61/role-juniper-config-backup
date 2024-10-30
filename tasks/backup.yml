@@ -6,9 +6,24 @@
   register: config_output
   # ignore_errors: true .. Whatever fails you want it out
 
-- name: Display task results
+# - name: Display task results
+#   ansible.builtin.debug:
+#     var: config_output
+
+- name: Write to fails.txt file
+  ansible.builtin.shell: |
+    echo {{ inventory_hostname }} >> fails.txt
+  delegate_to: localhost
+  when: config_output.failed
+  
+- name: Read fails.txt file
+  ansible.builtin.shell: |
+    cat fails.txt
+  register: file_read
+
+- name: Display fails.txt file read
   ansible.builtin.debug:
-    var: config_output
+    var: file_read
 
 - name: Set varibales
   ansible.builtin.set_fact:
