@@ -14,7 +14,7 @@ git_pwd: "{{ lookup('env', 'ANSIBLE_NET_PASSWORD') }}"
 
 
 # config backup
-config_backup_git_repo_f5_dir: junos
+config_backup_git_repo_f5_dir: juniper
 config_backup_git_repo_namespace: your-repo-name-space
 config_backup_git_repo_name: network-devices-configs-backup-store
 config_backup_git_repo_branch: main
