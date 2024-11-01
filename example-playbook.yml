@@ -1,27 +1,30 @@
 ---
 - name: Backup junos configurations
-  hosts: junos 
+  hosts: junos # parent group
   gather_facts: false
-  connection: network_cli
-
+  connection: ansible.netcommon.netconf
+  # connection: ansible.netcommon.network_cli
+  
   vars:
-    ansible_network_os: ios
+    ansible_network_os: junos
 
   pre_tasks:
     - name: Include specific project variables
       ansible.builtin.include_vars:
         dir: group_vars
+      run_once: true
       delegate_to: localhost
 
   tasks:
-    - name: Set file operations facts
-      ansible.builtin.set_fact:
-        tmp_config_store: "{{ root_dir }}/{{ config_backup_file }}"
-        git_repo_vendor_dir: "{{ junos_git_repo_dir }}"
-      delegate_to: localhost
-
-    - name: Import role-junos-config-backup role
+    - name: "Backup running configs to Gitlab repo => {{ config_backup_git_repo_name }}"
       ansible.builtin.import_role:
         name: role-junos-config-backup
       vars:
-        junos: true
+        backup: true
+        tmp_root_dir: "{{ root_dir }}"
+        vendor_dir: "{{ config_backup_git_repo_junos_dir }}"
+        git_repo_name: "{{ config_backup_git_repo_name }}"
+        git_repo_url: "{{ config_backup_git_repo_url }}"
+        git_repo_branch: "{{ config_backup_git_repo_branch }}"
+        git_user: "{{ git_user }}"
+        git_user_email: "{{ git_user_email }}"
