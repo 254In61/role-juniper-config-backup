@@ -16,6 +16,14 @@
 #   ansible.builtin.debug:
 #     var: config_output
 
+- name: Clean up files  # Ensure no git conflicts
+  ansible.builtin.shell: |
+    cd {{ tmp_root_dir }}
+    rm -rf {{ git_repo_name }}
+  run_once: true
+  ignore_errors: true
+  delegate_to: localhost
+
 # regex_replace('\r\n', '\n'): Ensures that the configuration is formatted properly with new lines,
 # in case the original output contains carriage return and line feed (\r\n).
 - name: Ensure the config is properly formatted
@@ -45,6 +53,18 @@
   environment:
     GIT_SSL_NO_VERIFY: "true"
   run_once: true
+  delegate_to: localhost
+
+# Enable git lfs by default
+- name: Enable git lfs by default
+  ansible.builtin.shell: |
+    cd {{ tmp_root_dir }}/{{ git_repo_name }}
+    git lfs track "*.bin"
+    git lfs track "*.ucs"
+    git lfs track "*.tgz" 
+    git lfs pull 
+  run_once: true
+  ignore_errors: true
   delegate_to: localhost
 
 - name: Ensure inventory_hostname dir is present - create if absent
