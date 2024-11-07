@@ -4,6 +4,7 @@
     tmp_file_path: "{{ tmp_root_dir }}/{{ inventory_hostname }}-running-config.cfg"
     inventory_hostname_dir_path: "{{ tmp_root_dir }}/{{ git_repo_name }}/{{ vendor_dir }}/{{ inventory_hostname }}/config-backup"
   delegate_to: localhost
+  ignore_errors: true # You want the role to run end to end
 
 - name: Collect junos device running configs
   junipernetworks.junos.junos_command:
@@ -54,6 +55,7 @@
     GIT_SSL_NO_VERIFY: "true"
   run_once: true
   delegate_to: localhost
+  ignore_errors: true # You want the role to run end to end
 
 # Enable git lfs by default
 - name: Enable git lfs by default
@@ -80,6 +82,7 @@
   run_once: true
   delegate_to: localhost
   register: files_collection
+  ignore_errors: true # You want the role to run end to end
 
 # - name: Debug output
 #   ansible.builtin.debug:
@@ -104,7 +107,7 @@
   run_once: true
   environment:
     GIT_SSL_NO_VERIFY: "true"
-  # ignore_errors: true # You want the play to fail if git push does not happen
+  ignore_errors: true # You want the role to run end to end
   delegate_to: localhost
 
 # Might not need this since containers are ephemeral.
