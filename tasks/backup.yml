@@ -13,9 +13,25 @@
   register: config_output
   ignore_errors: true
 
-# - name: Display task results
-#   ansible.builtin.debug:
-#     var: config_output
+- name: Display task results
+  ansible.builtin.debug:
+    var: config_output
+
+# Change netconf port from 830 to 22 if above failed.
+# - block:
+#     - name: Change netconf port from 830 to 22
+#       ansible.builtin.set_fact:
+#         ansible_port: 22
+
+#     - name: Collect junos device running configs
+#       junipernetworks.junos.junos_command:
+#         commands: show configuration
+#         display: set
+#       register: config_output
+#       ignore_errors: true
+#   when: 
+    
+    
 
 - name: Clean up files  # Ensure no git conflicts
   ansible.builtin.shell: |
