@@ -1,29 +1,10 @@
 ---
-- name: Set varibles
-  ansible.builtin.set_fact:
-    tmp_file_path: "{{ tmp_root_dir }}/{{ inventory_hostname }}-running-config.cfg"
-    inventory_hostname_dir_path: "{{ tmp_root_dir }}/{{ git_repo_name }}/{{ vendor_dir }}/{{ inventory_hostname }}/config-backup"
-  delegate_to: localhost
-  ignore_errors: true # You want the role to run end to end
-
 - name: Collect junos device running configs
   junipernetworks.junos.junos_command:
     commands: show configuration
     display: set
   register: config_output
   ignore_errors: true
-
-# - name: Display task results
-#   ansible.builtin.debug:
-#     var: config_output
-
-- name: Clean up files  # Ensure no git conflicts
-  ansible.builtin.shell: |
-    cd {{ tmp_root_dir }}
-    rm -rf {{ git_repo_name }}
-  run_once: true
-  ignore_errors: true
-  delegate_to: localhost
 
 # regex_replace('\r\n', '\n'): Ensures that the configuration is formatted properly with new lines,
 # in case the original output contains carriage return and line feed (\r\n).
@@ -34,14 +15,12 @@
   ignore_errors: true
   when: config_output["failed"] == false
 
-- name: Save the configuration to the temporary config store
+- name: Save the configuration to the temporary file
   ansible.builtin.copy:
     content: "{{ formatted_config }}"
-    dest: "{{ tmp_file_path }}"
+    dest: "{{ _tmp_root_dir_ }}/{{ _file_name_ }}"
   delegate_to: localhost
   ignore_errors: true
   when: config_output["failed"] == false
 
-- name: Import Tasks
-  ansible.builtin.import_tasks: git.yml
 
