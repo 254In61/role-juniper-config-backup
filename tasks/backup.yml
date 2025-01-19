@@ -18,7 +18,7 @@
 - name: Save the configuration to the temporary file
   ansible.builtin.copy:
     content: "{{ formatted_config }}"
-    dest: "{{ _tmp_root_dir_ }}/{{ _file_name_ }}"
+    dest: "{{ _local_file_path_ }}"
   delegate_to: localhost
   ignore_errors: true
   when: config_output["failed"] == false
